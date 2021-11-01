@@ -12,8 +12,11 @@ function sortByTotalPrice(a, b) {
 }
 
 module.exports = (goods) => {
-  if (typeof goods === 'undefined') {
-    goods = goodsFromJson.map((good) => helper3(good));
+  let filledGoodsArray;
+  if (!goods) {
+    filledGoodsArray = goodsFromJson.map((good) => helper3(good));
+  } else {
+    filledGoodsArray = goods;
   }
-  return goods.sort(sortByTotalPrice)[0];
+  return filledGoodsArray.sort(sortByTotalPrice)[0];
 };

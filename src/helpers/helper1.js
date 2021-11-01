@@ -1,9 +1,2 @@
-module.exports = (goodsArray, ...filterKeyValues) => {
-  let transitionalArray = goodsArray;
-  for (const keyValue of filterKeyValues) {
-    transitionalArray = transitionalArray.filter(
-      (good) => good[Object.keys(keyValue)[0]] === Object.values(keyValue)[0],
-    );
-  }
-  return transitionalArray;
-};
+module.exports = (goodsArray, sortKey, sortValue) =>
+  goodsArray.filter((good) => good[sortKey] === sortValue);

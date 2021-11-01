@@ -1,7 +1,21 @@
+function findItemPriceIndex(good) {
+  return Object.keys(good).findIndex(
+    (fieldName) => fieldName === 'pricePerKilo' || fieldName === 'pricePerItem',
+  );
+}
+
+function findItemCountIndex(good) {
+  return Object.keys(good).findIndex(
+    (fieldName) => fieldName === 'quantity' || fieldName === 'weight',
+  );
+}
+
 module.exports = (good) => {
-  const unitePrice = parseFloat(good[Object.keys(good)[3]].replace('$', ''));
+  const unitePrice = Number(
+    good[Object.keys(good)[findItemPriceIndex(good)]].replace('$', ''),
+  );
   return {
     ...good,
-    price: good[Object.keys(good)[2]] * unitePrice,
+    price: good[Object.keys(good)[findItemCountIndex(good)]] * unitePrice,
   };
 };
