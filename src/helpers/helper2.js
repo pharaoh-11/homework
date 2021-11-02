@@ -14,7 +14,7 @@ function sortByTotalPrice(a, b) {
 module.exports = (goods) => {
   let filledGoodsArray;
   if (!goods) {
-    filledGoodsArray = goodsFromJson.map((good) => helper3(good));
+    filledGoodsArray = helper3(goodsFromJson);
   } else {
     filledGoodsArray = goods;
   }

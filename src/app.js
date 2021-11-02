@@ -6,7 +6,7 @@ const {
 const goods = require('../goods.json');
 
 function boot(goodsArray) {
-  const goodsWithPrices = goodsArray.map((good) => addPriceKey(good));
+  const goodsWithPrices = addPriceKey(goodsArray);
   console.log('Goods with added "price" as an object key:');
   console.log(goodsWithPrices);
 
@@ -24,9 +24,7 @@ function boot(goodsArray) {
   console.log(getMostExpensive([...oranges, ...$4KilogramGoods]));
 
   console.log('Here is the result of helper3 with 2 results of helper1');
-  console.log(
-    [...oranges, ...$4KilogramGoods].map((good) => addPriceKey(good)),
-  );
+  console.log(addPriceKey([...oranges, ...$4KilogramGoods]));
 
   console.log('Here is the results of helper3 function without argument:');
   console.log(getMostExpensive());
