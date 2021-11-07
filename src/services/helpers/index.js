@@ -4,4 +4,4 @@ const helper3 = require('./helper3');
 const convertObjectValue = require('./convertObjectValue');
 const validate = require('./validate');
 
-module.exports = { helper1, helper2, helper3, convertObjectValue, validate };
+module.exports = { helper1, helper2, helper3, convertObjectValue, validateUtil: validate };

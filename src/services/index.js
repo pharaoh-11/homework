@@ -3,7 +3,7 @@ const serverGoods = require('./goods.json');
 const {
   helper1: filterUtil,
   convertObjectValue,
-  validate,
+  validateUtil,
   helper2: sortUtil,
   helper3: addPriceKey,
 } = require('./helpers');
@@ -38,7 +38,7 @@ function filter(params, goods) {
   }
   if (filteredGoods.length === 0) {
     return {
-      code: 422,
+      code: 204,
       message: 'There are no results that satisfy your query parameters',
     };
   }
@@ -52,11 +52,11 @@ function postFilter(body, params) {
   let goodsArray;
   try {
     goodsArray = JSON.parse(body);
-    validate(goodsArray);
+    validateUtil(goodsArray);
   } catch (e) {
     return {
       code: 422,
-      message: 'The arrays of goods had not pass the validation',
+      message: `The arrays of goods had not pass the validation\n${e.message}`,
     };
   }
   return filter(params, goodsArray);
@@ -73,11 +73,11 @@ function postTopPrice(body) {
   let goodsArray;
   try {
     goodsArray = JSON.parse(body);
-    validate(goodsArray);
+    validateUtil(goodsArray);
   } catch (e) {
     return {
       code: 422,
-      message: 'The arrays of goods had not pass the validation',
+      message: `The arrays of goods had not pass the validation\n${e.message}`,
     };
   }
   return {
@@ -97,11 +97,11 @@ function postCommonPrice(body) {
   let goodsArray;
   try {
     goodsArray = JSON.parse(body);
-    validate(goodsArray);
+    validateUtil(goodsArray);
   } catch (e) {
     return {
       code: 422,
-      message: 'The arrays of goods had not pass the validation',
+      message: `The arrays of goods had not pass the validation\n${e.message}`,
     };
   }
   return {
@@ -114,11 +114,11 @@ async function writeData(body) {
   let goodsArray;
   try {
     goodsArray = JSON.parse(body);
-    validate(goodsArray);
+    validateUtil(goodsArray);
   } catch (e) {
     return {
       code: 422,
-      message: 'The arrays of goods had not pass the validation',
+      message: `The arrays of goods had not pass the validation\n${e.message}`,
     };
   }
   await fs.writeFileSync(`${__dirname}/goods.json`, body);
