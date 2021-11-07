@@ -1,3 +1,4 @@
+const fs = require('fs');
 const serverGoods = require('./goods.json');
 const {
   helper1: filterUtil,
@@ -109,6 +110,24 @@ function postCommonPrice(body) {
   };
 }
 
+async function writeData(body) {
+  let goodsArray;
+  try {
+    goodsArray = JSON.parse(body);
+    validate(goodsArray);
+  } catch (e) {
+    return {
+      code: 422,
+      message: 'The arrays of goods had not pass the validation',
+    };
+  }
+  await fs.writeFileSync(`${__dirname}/goods.json`, body);
+  return {
+    code: 201,
+    message: 'The json file was rewritten',
+  };
+}
+
 module.exports = {
   home,
   notFound,
@@ -118,4 +137,5 @@ module.exports = {
   postTopPrice,
   commonPrice,
   postCommonPrice,
+  writeData,
 };

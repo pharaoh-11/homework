@@ -56,6 +56,13 @@ function postCommonPrice(req, res) {
   res.end();
 }
 
+async function writeData(req, res) {
+  const { message, code } = await services.writeData(req.body);
+  res.statusCode = code;
+  res.write(message);
+  res.end();
+}
+
 module.exports = {
   home,
   notFound,
@@ -65,4 +72,5 @@ module.exports = {
   postTopPrice,
   commonPrice,
   postCommonPrice,
+  writeData,
 };

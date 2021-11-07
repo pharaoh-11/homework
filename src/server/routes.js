@@ -1,6 +1,6 @@
 const controllers = require('./controllers');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   const { pathname, method } = req;
 
   if (pathname === '/' && method === 'GET') return controllers.home(req, res);
@@ -21,6 +21,9 @@ module.exports = (req, res) => {
   }
   if (pathname === '/commonprice' && method === 'POST') {
     return controllers.postCommonPrice(req, res);
+  }
+  if (pathname === '/data' && method === 'POST') {
+    return controllers.writeData(req, res);
   }
 
   return controllers.notFound(req, res);
