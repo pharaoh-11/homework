@@ -1,5 +1,5 @@
 module.exports = (key, value) => {
-  if (key === 'quantity' || key === 'weight') {
+  if (['quantity', 'weight'].includes(key)) {
     return Number(value);
   }
   return value;

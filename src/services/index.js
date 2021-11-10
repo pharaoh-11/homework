@@ -8,6 +8,23 @@ const {
   helper3: addPriceKey,
 } = require('./helpers');
 
+function parseAndValidateGoods(goodsAsString) {
+  let goodsArray;
+  try {
+    goodsArray = JSON.parse(goodsAsString);
+    validateUtil(goodsArray);
+  } catch (e) {
+    return {
+      err: {
+        code: 422,
+        message: `The arrays of goods had not pass the validation\n${e.message}`,
+      },
+      goodsArray: null,
+    };
+  }
+  return { err: null, goodsArray };
+}
+
 function home() {
   return {
     code: 200,
@@ -23,17 +40,15 @@ function notFound() {
 }
 
 function filter(params, goods) {
-  let goodsArray;
-  if (!goods) {
-    goodsArray = serverGoods;
-  } else {
-    goodsArray = goods;
-  }
-  let filteredGoods = goodsArray;
+  let filteredGoods = goods || serverGoods;
   if (params.toString() !== '') {
     // eslint-disable-next-line no-restricted-syntax
     for (const key of params.keys()) {
-      filteredGoods = filterUtil(filteredGoods, key, convertObjectValue(key, params.get(key)));
+      filteredGoods = filterUtil(
+        filteredGoods,
+        key,
+        convertObjectValue(key, params.get(key)),
+      );
     }
   }
   if (filteredGoods.length === 0) {
@@ -49,15 +64,9 @@ function filter(params, goods) {
 }
 
 function postFilter(body, params) {
-  let goodsArray;
-  try {
-    goodsArray = JSON.parse(body);
-    validateUtil(goodsArray);
-  } catch (e) {
-    return {
-      code: 422,
-      message: `The arrays of goods had not pass the validation\n${e.message}`,
-    };
+  const { err, goodsArray } = parseAndValidateGoods(body);
+  if (err) {
+    return err;
   }
   return filter(params, goodsArray);
 }
@@ -70,15 +79,9 @@ function topPrice() {
 }
 
 function postTopPrice(body) {
-  let goodsArray;
-  try {
-    goodsArray = JSON.parse(body);
-    validateUtil(goodsArray);
-  } catch (e) {
-    return {
-      code: 422,
-      message: `The arrays of goods had not pass the validation\n${e.message}`,
-    };
+  const { err, goodsArray } = parseAndValidateGoods(body);
+  if (err) {
+    return err;
   }
   return {
     code: 200,
@@ -94,15 +97,9 @@ function commonPrice() {
 }
 
 function postCommonPrice(body) {
-  let goodsArray;
-  try {
-    goodsArray = JSON.parse(body);
-    validateUtil(goodsArray);
-  } catch (e) {
-    return {
-      code: 422,
-      message: `The arrays of goods had not pass the validation\n${e.message}`,
-    };
+  const { err, goodsArray } = parseAndValidateGoods(body);
+  if (err) {
+    return err;
   }
   return {
     code: 200,
@@ -111,15 +108,9 @@ function postCommonPrice(body) {
 }
 
 async function writeData(body) {
-  let goodsArray;
-  try {
-    goodsArray = JSON.parse(body);
-    validateUtil(goodsArray);
-  } catch (e) {
-    return {
-      code: 422,
-      message: `The arrays of goods had not pass the validation\n${e.message}`,
-    };
+  const { err } = parseAndValidateGoods(body);
+  if (err) {
+    return err;
   }
   await fs.writeFileSync(`${__dirname}/goods.json`, body);
   return {
