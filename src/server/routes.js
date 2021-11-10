@@ -4,9 +4,8 @@ module.exports = async (req, res) => {
   const { pathname, method } = req;
 
   if (pathname === '/' && method === 'GET') return controllers.home(req, res);
-  if (pathname === '/filter' && method === 'GET') {
+  if (pathname === '/filter' && method === 'GET')
     return controllers.getFilter(req, res);
-  }
   if (pathname === '/filter' && method === 'POST')
     return controllers.postFilter(req, res);
   if (pathname === '/topprice' && method === 'GET')
