@@ -13,5 +13,6 @@ module.exports = {
     'no-console': 'off',
     'max-len': ['warn', { code: 80 }],
     semi: 'warn',
+    'comma-dangle': 'error',
   },
 };

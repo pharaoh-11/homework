@@ -1,33 +1,9 @@
-const {
-  helper1: sort,
-  helper2: getMostExpensive,
-  helper3: addPriceKey,
-} = require('./helpers');
-const goods = require('../goods.json');
+const http = require('http');
 
-function boot(goodsArray) {
-  const goodsWithPrices = addPriceKey(goodsArray);
-  console.log('Goods with added "price" as an object key:');
-  console.log(goodsWithPrices);
+const requestHandler = require('./server/requestHandler');
 
-  console.log('Sorting result by orange is:');
-  const oranges = sort(goodsWithPrices, 'item', 'orange');
-  console.log(oranges);
+const PORT = 3000;
 
-  console.log('Sorting result by weight - 4 is:');
-  const $4KilogramGoods = sort(goodsWithPrices, 'weight', 4);
-  console.log($4KilogramGoods);
-
-  console.log(
-    'Here is the most expensive good by the total price from sorted goods:',
-  );
-  console.log(getMostExpensive([...oranges, ...$4KilogramGoods]));
-
-  console.log('Here is the result of helper3 with 2 results of helper1');
-  console.log(addPriceKey([...oranges, ...$4KilogramGoods]));
-
-  console.log('Here is the results of helper3 function without argument:');
-  console.log(getMostExpensive());
-}
-
-boot(goods);
+http.createServer(requestHandler).listen(PORT, () => {
+  console.log(`Server successfully started on port ${PORT}`);
+});
