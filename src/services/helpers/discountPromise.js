@@ -1,9 +1,9 @@
 const { randomDiscount } = require('./index');
 
 const discountPromise = () =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     randomDiscount((err, result) => {
-      if (err) return reject(err);
+      if (err) return resolve(discountPromise());
       return resolve(result);
     });
   });

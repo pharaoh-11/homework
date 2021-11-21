@@ -122,15 +122,10 @@ async function writeData(body) {
 }
 
 async function getDiscountPromise() {
-  addDiscountPromise(serverGoods)
-    .then((goodsWithDiscount) => ({
-      code: 201,
-      message: JSON.stringify(goodsWithDiscount),
-    }))
-    .catch(() => ({
-      code: 500,
-      message: 'Internal server error',
-    }));
+  addDiscountPromise(serverGoods).then((goodsWithDiscount) => ({
+    code: 201,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
 
   // randomDiscount((err, discount) => {
   //   if (err) {
