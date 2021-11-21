@@ -52,11 +52,15 @@ async function writeData(req, res) {
 }
 
 function getDiscountPromise(req, res) {
-  services.getDiscountPromise().then((result) => {
-    res.statusCode = 200;
+  services
+    .getDiscountPromise()
+    .then((result) => finishResponse(res, result.message, result.code));
+}
 
-    return res.end(JSON.stringify(result));
-  });
+function postDiscountPromise(req, res) {
+  services
+    .postDiscountPromise(req.body)
+    .then((result) => finishResponse(res, result.message, result.code));
 }
 
 module.exports = {
@@ -70,4 +74,5 @@ module.exports = {
   postCommonPrice,
   writeData,
   getDiscountPromise,
+  postDiscountPromise,
 };

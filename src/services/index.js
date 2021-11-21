@@ -6,7 +6,6 @@ const {
   validateUtil,
   sortUtil,
   addTotalPrice,
-  randomDiscount,
   addDiscountPromise,
 } = require('./helpers');
 
@@ -122,22 +121,21 @@ async function writeData(body) {
 }
 
 function getDiscountPromise() {
-  return addDiscountPromise(serverGoods).then(
-    (goodsWithDiscount) => goodsWithDiscount,
-  );
+  return addDiscountPromise(serverGoods).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
+}
 
-  // randomDiscount((err, discount) => {
-  //   if (err) {
-  //     return {
-  //       code: 500,
-  //       message: 'Internal server error',
-  //     };
-  //   }
-  //   return {
-  //     code: 201,
-  //     message: JSON.stringify(addDiscountPromise(serverGoods, discount)),
-  //   };
-  // }),
+function postDiscountPromise(goods) {
+  const { err, goodsArray } = parseAndValidateGoods(goods);
+  if (err) {
+    return new Promise((resolve) => resolve(err));
+  }
+  return addDiscountPromise(goodsArray).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
 }
 
 module.exports = {
@@ -151,4 +149,5 @@ module.exports = {
   postCommonPrice,
   writeData,
   getDiscountPromise,
+  postDiscountPromise,
 };
