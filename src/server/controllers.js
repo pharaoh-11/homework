@@ -51,13 +51,12 @@ async function writeData(req, res) {
   finishResponse(res, message, code);
 }
 
-async function getDiscountPromise(req, res) {
-  services.getDiscountPromise().then(({ message, code }) => {
-    finishResponse(res, message, code);
-  });
+function getDiscountPromise(req, res) {
+  services.getDiscountPromise().then((result) => {
+    res.statusCode = 200;
 
-  // const { message, code } = services.getDiscountPromise();
-  // finishResponse(res, message, code);
+    return res.end(JSON.stringify(result));
+  });
 }
 
 module.exports = {

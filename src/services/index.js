@@ -121,11 +121,10 @@ async function writeData(body) {
   };
 }
 
-async function getDiscountPromise() {
-  addDiscountPromise(serverGoods).then((goodsWithDiscount) => ({
-    code: 201,
-    message: JSON.stringify(goodsWithDiscount),
-  }));
+function getDiscountPromise() {
+  return addDiscountPromise(serverGoods).then(
+    (goodsWithDiscount) => goodsWithDiscount,
+  );
 
   // randomDiscount((err, discount) => {
   //   if (err) {

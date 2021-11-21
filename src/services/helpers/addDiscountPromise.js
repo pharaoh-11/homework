@@ -1,5 +1,13 @@
 const addTotalPrice = require('./addTotalPrice');
-const { discountPromise } = require('./index');
+const randomDiscount = require('./randomDiscount');
+
+const discountPromise = () =>
+  new Promise((resolve) => {
+    randomDiscount((err, result) => {
+      if (err) return resolve(discountPromise());
+      return resolve(result);
+    });
+  });
 
 module.exports = (goods) =>
   Promise.all(
