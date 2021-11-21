@@ -1,7 +1,19 @@
-const helper1 = require('./helper1');
-const helper2 = require('./helper2');
-const helper3 = require('./helper3');
+const filterUtil = require('./filterUtil');
+const sortUtil = require('./sortUtil');
+const addTotalPrice = require('./addTotalPrice');
 const convertObjectValue = require('./convertObjectValue');
 const validate = require('./validate');
+const randomDiscount = require('./randomDiscount');
+const addDiscountPromise = require('./addDiscountPromise');
+const discountPromise = require('./discountPromise');
 
-module.exports = { helper1, helper2, helper3, convertObjectValue, validateUtil: validate };
+module.exports = {
+  filterUtil,
+  sortUtil,
+  addTotalPrice,
+  convertObjectValue,
+  validateUtil: validate,
+  randomDiscount,
+  addDiscountPromise,
+  discountPromise,
+};

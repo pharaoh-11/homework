@@ -1,11 +1,13 @@
 const fs = require('fs');
 const serverGoods = require('./goods.json');
 const {
-  helper1: filterUtil,
+  filterUtil,
   convertObjectValue,
   validateUtil,
-  helper2: sortUtil,
-  helper3: addPriceKey,
+  sortUtil,
+  addTotalPrice,
+  randomDiscount,
+  addDiscountPromise,
 } = require('./helpers');
 
 function parseAndValidateGoods(goodsAsString) {
@@ -92,7 +94,7 @@ function postTopPrice(body) {
 function commonPrice() {
   return {
     code: 200,
-    message: JSON.stringify(addPriceKey(serverGoods)),
+    message: JSON.stringify(addTotalPrice(serverGoods)),
   };
 }
 
@@ -103,7 +105,7 @@ function postCommonPrice(body) {
   }
   return {
     code: 200,
-    message: JSON.stringify(addPriceKey(goodsArray)),
+    message: JSON.stringify(addTotalPrice(goodsArray)),
   };
 }
 
@@ -119,6 +121,31 @@ async function writeData(body) {
   };
 }
 
+async function getDiscountPromise() {
+  addDiscountPromise(serverGoods)
+    .then((goodsWithDiscount) => ({
+      code: 201,
+      message: JSON.stringify(goodsWithDiscount),
+    }))
+    .catch(() => ({
+      code: 500,
+      message: 'Internal server error',
+    }));
+
+  // randomDiscount((err, discount) => {
+  //   if (err) {
+  //     return {
+  //       code: 500,
+  //       message: 'Internal server error',
+  //     };
+  //   }
+  //   return {
+  //     code: 201,
+  //     message: JSON.stringify(addDiscountPromise(serverGoods, discount)),
+  //   };
+  // }),
+}
+
 module.exports = {
   home,
   notFound,
@@ -129,4 +156,5 @@ module.exports = {
   commonPrice,
   postCommonPrice,
   writeData,
+  getDiscountPromise,
 };

@@ -51,6 +51,15 @@ async function writeData(req, res) {
   finishResponse(res, message, code);
 }
 
+async function getDiscountPromise(req, res) {
+  services.getDiscountPromise().then(({ message, code }) => {
+    finishResponse(res, message, code);
+  });
+
+  // const { message, code } = services.getDiscountPromise();
+  // finishResponse(res, message, code);
+}
+
 module.exports = {
   home,
   notFound,
@@ -61,4 +70,5 @@ module.exports = {
   commonPrice,
   postCommonPrice,
   writeData,
+  getDiscountPromise,
 };
