@@ -7,6 +7,7 @@ const randomDiscount = require('./randomDiscount');
 const addDiscountPromise = require('./addDiscountPromise');
 const addDiscountPromisify = require('./addDiscountPromisify');
 const addDiscountAsync = require('./addDiscountAsync');
+const addDiscountCallback = require('./addDiscountCallback');
 
 module.exports = {
   filterUtil,
@@ -18,4 +19,5 @@ module.exports = {
   addDiscountPromise,
   addDiscountPromisify,
   addDiscountAsync,
+  addDiscountCallback,
 };

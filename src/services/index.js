@@ -10,6 +10,7 @@ const {
   addDiscountPromise,
   addDiscountPromisify,
   addDiscountAsync,
+  addDiscountCallback,
 } = require('./helpers');
 
 function parseAndValidateGoods(goodsAsString) {
@@ -182,6 +183,16 @@ async function getDiscountAsync() {
   };
 }
 
+function getDiscountCallback(callback) {
+  return callback(
+    null,
+    addDiscountCallback(serverGoods, (err, result) => ({
+      code: 200,
+      message: JSON.stringify(result),
+    })),
+  );
+}
+
 module.exports = {
   home,
   notFound,
@@ -198,4 +209,5 @@ module.exports = {
   postDiscountPromisify,
   getDiscountAsync,
   postDiscountAsync,
+  getDiscountCallback,
 };

@@ -85,6 +85,12 @@ async function getDiscountAsync(req, res) {
   finishResponse(res, message, code);
 }
 
+function getDiscountCallback(req, res) {
+  services.getDiscountCallback((err, result) => {
+    finishResponse(res, result.message, result.code);
+  });
+}
+
 module.exports = {
   home,
   notFound,
@@ -101,4 +107,5 @@ module.exports = {
   postDiscountPromisify,
   getDiscountAsync,
   postDiscountAsync,
+  getDiscountCallback,
 };
