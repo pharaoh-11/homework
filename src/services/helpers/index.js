@@ -5,6 +5,8 @@ const convertObjectValue = require('./convertObjectValue');
 const validate = require('./validate');
 const randomDiscount = require('./randomDiscount');
 const addDiscountPromise = require('./addDiscountPromise');
+const addDiscountPromisify = require('./addDiscountPromisify');
+const addDiscountAsync = require('./addDiscountAsync');
 
 module.exports = {
   filterUtil,
@@ -14,4 +16,6 @@ module.exports = {
   validateUtil: validate,
   randomDiscount,
   addDiscountPromise,
+  addDiscountPromisify,
+  addDiscountAsync,
 };

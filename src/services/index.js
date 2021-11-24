@@ -1,4 +1,5 @@
 const fs = require('fs');
+const util = require('util');
 const serverGoods = require('./goods.json');
 const {
   filterUtil,
@@ -7,6 +8,8 @@ const {
   sortUtil,
   addTotalPrice,
   addDiscountPromise,
+  addDiscountPromisify,
+  addDiscountAsync,
 } = require('./helpers');
 
 function parseAndValidateGoods(goodsAsString) {
@@ -120,13 +123,6 @@ async function writeData(body) {
   };
 }
 
-function getDiscountPromise() {
-  return addDiscountPromise(serverGoods).then((goodsWithDiscount) => ({
-    code: 200,
-    message: JSON.stringify(goodsWithDiscount),
-  }));
-}
-
 function postDiscountPromise(goods) {
   const { err, goodsArray } = parseAndValidateGoods(goods);
   if (err) {
@@ -136,6 +132,54 @@ function postDiscountPromise(goods) {
     code: 200,
     message: JSON.stringify(goodsWithDiscount),
   }));
+}
+
+function getDiscountPromise() {
+  return addDiscountPromise(serverGoods).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
+}
+
+function postDiscountPromisify(goods) {
+  const { err, goodsArray } = parseAndValidateGoods(goods);
+  if (err) {
+    return util
+      .promisify((resolve) => resolve(err))
+      .call((resolve) => resolve(err))
+      .catch((error) => error);
+  }
+  return addDiscountPromisify(goodsArray).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
+}
+
+function getDiscountPromisify() {
+  return addDiscountPromisify(serverGoods).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
+}
+
+async function postDiscountAsync(goods) {
+  const { err, goodsArray } = parseAndValidateGoods(goods);
+  if (err) {
+    return err;
+  }
+  const goodsWithDiscount = await addDiscountAsync(goodsArray);
+  return {
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  };
+}
+
+async function getDiscountAsync() {
+  const goodsWithDiscount = await addDiscountAsync(serverGoods);
+  return {
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  };
 }
 
 module.exports = {
@@ -150,4 +194,8 @@ module.exports = {
   writeData,
   getDiscountPromise,
   postDiscountPromise,
+  getDiscountPromisify,
+  postDiscountPromisify,
+  getDiscountAsync,
+  postDiscountAsync,
 };

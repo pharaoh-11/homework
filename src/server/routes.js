@@ -21,10 +21,18 @@ module.exports = async (req, res) => {
   if (pathname.includes('/discount') && method === 'GET') {
     if (pathname.endsWith('/promise'))
       return controllers.getDiscountPromise(req, res);
+    if (pathname.endsWith('/promisify'))
+      return controllers.getDiscountPromisify(req, res);
+    if (pathname.endsWith('/async'))
+      return controllers.getDiscountAsync(req, res);
   }
   if (pathname.includes('/discount') && method === 'POST') {
     if (pathname.endsWith('/promise'))
       return controllers.postDiscountPromise(req, res);
+    if (pathname.endsWith('/promisify'))
+      return controllers.postDiscountPromisify(req, res);
+    if (pathname.endsWith('/async'))
+      return controllers.postDiscountAsync(req, res);
   }
 
   return controllers.notFound(req, res);

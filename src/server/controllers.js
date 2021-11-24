@@ -51,16 +51,38 @@ async function writeData(req, res) {
   finishResponse(res, message, code);
 }
 
+function postDiscountPromise(req, res) {
+  services
+    .postDiscountPromise(req.body)
+    .then((result) => finishResponse(res, result.message, result.code));
+}
+
 function getDiscountPromise(req, res) {
   services
     .getDiscountPromise()
     .then((result) => finishResponse(res, result.message, result.code));
 }
 
-function postDiscountPromise(req, res) {
+function postDiscountPromisify(req, res) {
   services
-    .postDiscountPromise(req.body)
+    .postDiscountPromisify(req.body)
     .then((result) => finishResponse(res, result.message, result.code));
+}
+
+function getDiscountPromisify(req, res) {
+  services
+    .getDiscountPromisify()
+    .then((result) => finishResponse(res, result.message, result.code));
+}
+
+async function postDiscountAsync(req, res) {
+  const { message, code } = await services.postDiscountAsync(req.body);
+  finishResponse(res, message, code);
+}
+
+async function getDiscountAsync(req, res) {
+  const { message, code } = await services.getDiscountAsync();
+  finishResponse(res, message, code);
 }
 
 module.exports = {
@@ -75,4 +97,8 @@ module.exports = {
   writeData,
   getDiscountPromise,
   postDiscountPromise,
+  getDiscountPromisify,
+  postDiscountPromisify,
+  getDiscountAsync,
+  postDiscountAsync,
 };
