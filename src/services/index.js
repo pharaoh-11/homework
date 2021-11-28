@@ -184,12 +184,11 @@ async function getDiscountAsync() {
 }
 
 function getDiscountCallback(callback) {
-  return callback(
-    null,
-    addDiscountCallback(serverGoods, (err, result) => ({
+  return addDiscountCallback(serverGoods, (err, result) =>
+    callback(null, {
       code: 200,
       message: JSON.stringify(result),
-    })),
+    }),
   );
 }
 

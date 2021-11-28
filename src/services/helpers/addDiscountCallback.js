@@ -9,7 +9,7 @@ const discountCallback = (callback) =>
 
 module.exports = (goods, callback) => {
   const existingDiscounts = [];
-  addTotalPrice(goods).map((good) =>
+  return addTotalPrice(goods).map((good) =>
     discountCallback((discountPercent) => {
       let discountPrice = good.price - (good.price * discountPercent) / 100;
       if (good.item === 'orange' && good.type === 'Tangerine')
@@ -22,12 +22,9 @@ module.exports = (goods, callback) => {
         ...good,
         priceWithDiscount: discountPrice.toFixed(2),
       });
+      if (existingDiscounts.length === goods.length) {
+        callback(null, existingDiscounts);
+      }
     }),
   );
-  if (existingDiscounts.length < goods.length) {
-    setTimeout(() => {
-      let q;
-      return callback(null, existingDiscounts);
-    }, 5000);
-  } else return callback(null, existingDiscounts);
 };
