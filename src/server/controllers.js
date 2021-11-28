@@ -53,48 +53,48 @@ async function writeData(req, res) {
 
 function postDiscountPromise(req, res) {
   services
-    .postDiscountPromise(req.body)
+    .discountPromise(req.body)
     .then((result) => finishResponse(res, result.message, result.code));
 }
 
 function getDiscountPromise(req, res) {
   services
-    .getDiscountPromise()
+    .discountPromise()
     .then((result) => finishResponse(res, result.message, result.code));
 }
 
 function postDiscountPromisify(req, res) {
   services
-    .postDiscountPromisify(req.body)
+    .discountPromisify(req.body)
     .then((result) => finishResponse(res, result.message, result.code));
 }
 
 function getDiscountPromisify(req, res) {
   services
-    .getDiscountPromisify()
+    .discountPromisify()
     .then((result) => finishResponse(res, result.message, result.code));
 }
 
 async function postDiscountAsync(req, res) {
-  const { message, code } = await services.postDiscountAsync(req.body);
+  const { message, code } = await services.discountAsync(req.body);
   finishResponse(res, message, code);
 }
 
 async function getDiscountAsync(req, res) {
-  const { message, code } = await services.getDiscountAsync();
+  const { message, code } = await services.discountAsync();
   finishResponse(res, message, code);
 }
 
 function getDiscountCallback(req, res) {
-  services.getDiscountCallback((err, result) => {
+  services.discountCallback((err, result) => {
     finishResponse(res, result.message, result.code);
   });
 }
 
 function postDiscountCallback(req, res) {
-  services.postDiscountCallback(req.body, (err, result) => {
+  services.discountCallback((err, result) => {
     finishResponse(res, result.message, result.code);
-  });
+  }, req.body);
 }
 
 module.exports = {

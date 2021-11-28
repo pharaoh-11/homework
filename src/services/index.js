@@ -124,10 +124,10 @@ async function writeData(body) {
   };
 }
 
-function postDiscountPromise(goods) {
+function discountPromise(goods = JSON.stringify(serverGoods)) {
   const { err, goodsArray } = parseAndValidateGoods(goods);
   if (err) {
-    return new Promise((resolve) => resolve(err));
+    return Promise.reject(err);
   }
   return addDiscountPromise(goodsArray).then((goodsWithDiscount) => ({
     code: 200,
@@ -135,14 +135,7 @@ function postDiscountPromise(goods) {
   }));
 }
 
-function getDiscountPromise() {
-  return addDiscountPromise(serverGoods).then((goodsWithDiscount) => ({
-    code: 200,
-    message: JSON.stringify(goodsWithDiscount),
-  }));
-}
-
-function postDiscountPromisify(goods) {
+function discountPromisify(goods = JSON.stringify(serverGoods)) {
   const { err, goodsArray } = parseAndValidateGoods(goods);
   if (err) {
     return util
@@ -156,14 +149,7 @@ function postDiscountPromisify(goods) {
   }));
 }
 
-function getDiscountPromisify() {
-  return addDiscountPromisify(serverGoods).then((goodsWithDiscount) => ({
-    code: 200,
-    message: JSON.stringify(goodsWithDiscount),
-  }));
-}
-
-async function postDiscountAsync(goods) {
+async function discountAsync(goods = JSON.stringify(serverGoods)) {
   const { err, goodsArray } = parseAndValidateGoods(goods);
   if (err) {
     return err;
@@ -175,24 +161,7 @@ async function postDiscountAsync(goods) {
   };
 }
 
-async function getDiscountAsync() {
-  const goodsWithDiscount = await addDiscountAsync(serverGoods);
-  return {
-    code: 200,
-    message: JSON.stringify(goodsWithDiscount),
-  };
-}
-
-function getDiscountCallback(callback) {
-  return addDiscountCallback(serverGoods, (err, result) =>
-    callback(null, {
-      code: 200,
-      message: JSON.stringify(result),
-    }),
-  );
-}
-
-function postDiscountCallback(goods, callback) {
+function discountCallback(callback, goods = JSON.stringify(serverGoods)) {
   const { error, goodsArray } = parseAndValidateGoods(goods);
   if (error) {
     return error;
@@ -216,12 +185,8 @@ module.exports = {
   commonPrice,
   postCommonPrice,
   writeData,
-  getDiscountPromise,
-  postDiscountPromise,
-  getDiscountPromisify,
-  postDiscountPromisify,
-  getDiscountAsync,
-  postDiscountAsync,
-  getDiscountCallback,
-  postDiscountCallback,
+  discountPromise,
+  discountPromisify,
+  discountAsync,
+  discountCallback,
 };
