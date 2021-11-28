@@ -35,6 +35,8 @@ module.exports = async (req, res) => {
       return controllers.postDiscountPromisify(req, res);
     if (pathname.endsWith('/async'))
       return controllers.postDiscountAsync(req, res);
+    if (pathname.endsWith('/callback'))
+      return controllers.postDiscountCallback(req, res);
   }
 
   return controllers.notFound(req, res);

@@ -192,6 +192,20 @@ function getDiscountCallback(callback) {
   );
 }
 
+function postDiscountCallback(goods, callback) {
+  const { error, goodsArray } = parseAndValidateGoods(goods);
+  if (error) {
+    return error;
+  }
+
+  return addDiscountCallback(goodsArray, (err, result) =>
+    callback(null, {
+      code: 200,
+      message: JSON.stringify(result),
+    }),
+  );
+}
+
 module.exports = {
   home,
   notFound,
@@ -209,4 +223,5 @@ module.exports = {
   getDiscountAsync,
   postDiscountAsync,
   getDiscountCallback,
+  postDiscountCallback,
 };

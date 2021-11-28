@@ -91,6 +91,12 @@ function getDiscountCallback(req, res) {
   });
 }
 
+function postDiscountCallback(req, res) {
+  services.postDiscountCallback(req.body, (err, result) => {
+    finishResponse(res, result.message, result.code);
+  });
+}
+
 module.exports = {
   home,
   notFound,
@@ -108,4 +114,5 @@ module.exports = {
   getDiscountAsync,
   postDiscountAsync,
   getDiscountCallback,
+  postDiscountCallback,
 };
