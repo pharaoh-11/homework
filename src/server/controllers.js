@@ -51,6 +51,52 @@ async function writeData(req, res) {
   finishResponse(res, message, code);
 }
 
+function postDiscountPromise(req, res) {
+  services
+    .discountPromise(req.body)
+    .then((result) => finishResponse(res, result.message, result.code));
+}
+
+function getDiscountPromise(req, res) {
+  services
+    .discountPromise()
+    .then((result) => finishResponse(res, result.message, result.code));
+}
+
+function postDiscountPromisify(req, res) {
+  services
+    .discountPromisify(req.body)
+    .then((result) => finishResponse(res, result.message, result.code));
+}
+
+function getDiscountPromisify(req, res) {
+  services
+    .discountPromisify()
+    .then((result) => finishResponse(res, result.message, result.code));
+}
+
+async function postDiscountAsync(req, res) {
+  const { message, code } = await services.discountAsync(req.body);
+  finishResponse(res, message, code);
+}
+
+async function getDiscountAsync(req, res) {
+  const { message, code } = await services.discountAsync();
+  finishResponse(res, message, code);
+}
+
+function getDiscountCallback(req, res) {
+  services.discountCallback((err, result) => {
+    finishResponse(res, result.message, result.code);
+  });
+}
+
+function postDiscountCallback(req, res) {
+  services.discountCallback((err, result) => {
+    finishResponse(res, result.message, result.code);
+  }, req.body);
+}
+
 module.exports = {
   home,
   notFound,
@@ -61,4 +107,12 @@ module.exports = {
   commonPrice,
   postCommonPrice,
   writeData,
+  getDiscountPromise,
+  postDiscountPromise,
+  getDiscountPromisify,
+  postDiscountPromisify,
+  getDiscountAsync,
+  postDiscountAsync,
+  getDiscountCallback,
+  postDiscountCallback,
 };

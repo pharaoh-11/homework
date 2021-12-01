@@ -1,4 +1,4 @@
-const helper3 = require('./helper3');
+const addTotalPrice = require('./addTotalPrice');
 
 function sortByTotalPrice(a, b) {
   if (a.price < b.price) {
@@ -10,4 +10,4 @@ function sortByTotalPrice(a, b) {
   return 0;
 }
 
-module.exports = (goods) => helper3(goods).sort(sortByTotalPrice)[0];
+module.exports = (goods) => addTotalPrice(goods).sort(sortByTotalPrice)[0];

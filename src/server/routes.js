@@ -18,6 +18,26 @@ module.exports = async (req, res) => {
     return controllers.postCommonPrice(req, res);
   if (pathname === '/data' && method === 'POST')
     return controllers.writeData(req, res);
+  if (pathname.includes('/discount') && method === 'GET') {
+    if (pathname.endsWith('/promise'))
+      return controllers.getDiscountPromise(req, res);
+    if (pathname.endsWith('/promisify'))
+      return controllers.getDiscountPromisify(req, res);
+    if (pathname.endsWith('/async'))
+      return controllers.getDiscountAsync(req, res);
+    if (pathname.endsWith('/callback'))
+      return controllers.getDiscountCallback(req, res);
+  }
+  if (pathname.includes('/discount') && method === 'POST') {
+    if (pathname.endsWith('/promise'))
+      return controllers.postDiscountPromise(req, res);
+    if (pathname.endsWith('/promisify'))
+      return controllers.postDiscountPromisify(req, res);
+    if (pathname.endsWith('/async'))
+      return controllers.postDiscountAsync(req, res);
+    if (pathname.endsWith('/callback'))
+      return controllers.postDiscountCallback(req, res);
+  }
 
   return controllers.notFound(req, res);
 };

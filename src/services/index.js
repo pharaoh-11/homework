@@ -1,11 +1,16 @@
 const fs = require('fs');
+const util = require('util');
 const serverGoods = require('./goods.json');
 const {
-  helper1: filterUtil,
+  filterUtil,
   convertObjectValue,
   validateUtil,
-  helper2: sortUtil,
-  helper3: addPriceKey,
+  sortUtil,
+  addTotalPrice,
+  addDiscountPromise,
+  addDiscountPromisify,
+  addDiscountAsync,
+  addDiscountCallback,
 } = require('./helpers');
 
 function parseAndValidateGoods(goodsAsString) {
@@ -92,7 +97,7 @@ function postTopPrice(body) {
 function commonPrice() {
   return {
     code: 200,
-    message: JSON.stringify(addPriceKey(serverGoods)),
+    message: JSON.stringify(addTotalPrice(serverGoods)),
   };
 }
 
@@ -103,7 +108,7 @@ function postCommonPrice(body) {
   }
   return {
     code: 200,
-    message: JSON.stringify(addPriceKey(goodsArray)),
+    message: JSON.stringify(addTotalPrice(goodsArray)),
   };
 }
 
@@ -119,6 +124,57 @@ async function writeData(body) {
   };
 }
 
+function discountPromise(goods = JSON.stringify(serverGoods)) {
+  const { err, goodsArray } = parseAndValidateGoods(goods);
+  if (err) {
+    return Promise.reject(err);
+  }
+  return addDiscountPromise(goodsArray).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
+}
+
+function discountPromisify(goods = JSON.stringify(serverGoods)) {
+  const { err, goodsArray } = parseAndValidateGoods(goods);
+  if (err) {
+    return util
+      .promisify((resolve) => resolve(err))
+      .call((resolve) => resolve(err))
+      .catch((error) => error);
+  }
+  return addDiscountPromisify(goodsArray).then((goodsWithDiscount) => ({
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  }));
+}
+
+async function discountAsync(goods = JSON.stringify(serverGoods)) {
+  const { err, goodsArray } = parseAndValidateGoods(goods);
+  if (err) {
+    return err;
+  }
+  const goodsWithDiscount = await addDiscountAsync(goodsArray);
+  return {
+    code: 200,
+    message: JSON.stringify(goodsWithDiscount),
+  };
+}
+
+function discountCallback(callback, goods = JSON.stringify(serverGoods)) {
+  const { error, goodsArray } = parseAndValidateGoods(goods);
+  if (error) {
+    return error;
+  }
+
+  return addDiscountCallback(goodsArray, (err, result) =>
+    callback(null, {
+      code: 200,
+      message: JSON.stringify(result),
+    }),
+  );
+}
+
 module.exports = {
   home,
   notFound,
@@ -129,4 +185,8 @@ module.exports = {
   commonPrice,
   postCommonPrice,
   writeData,
+  discountPromise,
+  discountPromisify,
+  discountAsync,
+  discountCallback,
 };
