@@ -1,6 +1,7 @@
 const fs = require('fs');
 const util = require('util');
 const serverGoods = require('./goods.json');
+const csvParser = require('./helpers/csvParser');
 const {
   filterUtil,
   convertObjectValue,
@@ -112,12 +113,27 @@ function postCommonPrice(body) {
   };
 }
 
-async function writeData(body) {
-  const { err } = parseAndValidateGoods(body);
-  if (err) {
-    return err;
-  }
-  await fs.writeFileSync(`${__dirname}/goods.json`, body);
+async function writeData(req) {
+  // let jsonStringBody;
+  // try {
+  //   if (!csvParser.isJson(body)) {
+  //     jsonStringBody = csvParser.csvToJson(body);
+  //   } else {
+  //     jsonStringBody = body;
+  //   }
+  //   const jsonData = JSON.parse(jsonStringBody);
+  // } catch (e) {
+  //   return {
+  //     code: 500,
+  //     message: `Internal server error\n${e.message}`,
+  //   };
+  // }
+
+  // const { err } = parseAndValidateGoods(jsonStringBody);
+  // if (err) {
+  //   return err;
+  // }
+  // await fs.writeFileSync(`${__dirname}/goods.json`, jsonStringBody);
   return {
     code: 201,
     message: 'The json file was rewritten',
