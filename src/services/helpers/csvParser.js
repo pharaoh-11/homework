@@ -1,34 +1,97 @@
-function isJson(stringValue) {
-  try {
-    JSON.parse(stringValue);
-  } catch (e) {
-    return false;
+class CsvParser {
+  cutLine;
+
+  headers;
+
+  firstIteration;
+
+  firstLine = 'item,type,measure,measureValue,priceType,priceValue';
+
+  // eslint-disable-next-line class-methods-use-this
+  isJson(stringValue) {
+    try {
+      JSON.parse(stringValue);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 
-function csvToJson(stringValue) {
-  const lines = stringValue.split('\n');
+  csvToJson(stringValue) {
+    let obj;
+    const isBrokenChunk = !stringValue.endsWith('\n');
 
-  const result = [];
+    this.firstIteration = 0;
+    if (this.cutLine) {
+      stringValue = this.cutLine + stringValue;
+    }
+    const lines = stringValue.split('\n');
 
-  const headers = lines[0].split(',');
+    const resultJsonObjects = [];
 
-  for (let i = 1; i < lines.length - 1; i++) {
-    const obj = {};
-    const currentLine = lines[i]
-      .replace(/((?<=\$\d)|(?<=\$\d\d)|(?<=\$\d\d\d)|(?<=\$\d\d\d\d)),/g, '.')
-      .replace(/"/g, '')
-      .split(',');
-
-    for (let j = 0; j < headers.length; j++) {
-      obj[headers[j]] = currentLine[j];
+    if (lines[0] === this.firstLine) {
+      this.headers = lines[0].split(',');
+      this.firstIteration = 1;
     }
 
-    result.push(obj);
-  }
+    for (let i = this.firstIteration; i < lines.length - 1; i++) {
+      obj = {};
 
-  return JSON.stringify(result);
+      const currentLine = lines[i]
+        .replace(/((?<=\$\d)|(?<=\$\d\d)|(?<=\$\d\d\d)|(?<=\$\d\d\d\d)),/g, '.')
+        .replace(/"/g, '')
+        .split(',');
+
+      for (let j = 0; j < this.headers.length; j++) {
+        obj[this.headers[j]] = currentLine[j];
+      }
+
+      resultJsonObjects.push(obj);
+    }
+    if (isBrokenChunk) {
+      this.cutLine = lines[lines.length - 1]
+        .replace(/((?<=\$\d)|(?<=\$\d\d)|(?<=\$\d\d\d)|(?<=\$\d\d\d\d)),/g, '.')
+        .replace(/"/g, '')
+        .split(',');
+    } else {
+      this.cutLine = undefined;
+    }
+
+    return JSON.stringify(resultJsonObjects);
+  }
 }
 
-module.exports = { isJson, csvToJson };
+// function isJson(stringValue) {
+//   try {
+//     JSON.parse(stringValue);
+//   } catch (e) {
+//     return false;
+//   }
+//   return true;
+// }
+//
+// function csvToJson(stringValue) {
+//   const lines = stringValue.split('\n');
+//
+//   const result = [];
+//
+//   const headers = lines[0].split(',');
+//
+//   for (let i = 1; i < lines.length - 1; i++) {
+//     const obj = {};
+//     const currentLine = lines[i]
+//       .replace(/((?<=\$\d)|(?<=\$\d\d)|(?<=\$\d\d\d)|(?<=\$\d\d\d\d)),/g, '.')
+//       .replace(/"/g, '')
+//       .split(',');
+//
+//     for (let j = 0; j < headers.length; j++) {
+//       obj[headers[j]] = currentLine[j];
+//     }
+//
+//     result.push(obj);
+//   }
+//
+//   return JSON.stringify(result);
+// }
+
+module.exports = CsvParser;

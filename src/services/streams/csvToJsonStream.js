@@ -1,12 +1,17 @@
 const { Duplex } = require('stream');
-const csvParser = require('../helpers/csvParser');
+const CsvParser = require('../helpers/csvParser');
 const validate = require('../helpers/validate');
 
 class CsvToJsonStream extends Duplex {
+  constructor() {
+    super();
+    this.csvParser = new CsvParser();
+  }
+
   _write(chunk, _, next) {
     let jsonObjects;
-    if (!csvParser.isJson(chunk.toString())) {
-      jsonObjects = JSON.parse(csvParser.csvToJson(chunk.toString()));
+    if (!this.csvParser.isJson(chunk.toString())) {
+      jsonObjects = JSON.parse(this.csvParser.csvToJson(chunk.toString()));
     } else {
       jsonObjects = JSON.parse(chunk.toString());
     }
@@ -21,12 +26,17 @@ class CsvToJsonStream extends Duplex {
         correctObject = {};
         correctObject.item = object.item;
         correctObject.type = object.type;
+        if (object.measure === undefined) {
+          console.log(77);
+        }
         if (object.measure === 'quantity') {
           correctObject.quantity = object.measureValue;
         } else if (object.measure === 'weight') {
           correctObject.weight = object.measureValue;
         } else {
-          throw new Error('Incorrect csv object measure');
+          throw new Error(
+            `Incorrect csv object measure\n${object.item}-${object.type}-${object.measure}-${object.measureValue}-${object.priceType}-${object.priceValue}`,
+          );
         }
         if (object.priceType === 'pricePerItem') {
           correctObject.pricePerItem = object.priceValue.replace(',', '.');
