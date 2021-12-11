@@ -26,17 +26,12 @@ class CsvToJsonStream extends Duplex {
         correctObject = {};
         correctObject.item = object.item;
         correctObject.type = object.type;
-        if (object.measure === undefined) {
-          console.log(77);
-        }
         if (object.measure === 'quantity') {
           correctObject.quantity = object.measureValue;
         } else if (object.measure === 'weight') {
           correctObject.weight = object.measureValue;
         } else {
-          throw new Error(
-            `Incorrect csv object measure\n${object.item}-${object.type}-${object.measure}-${object.measureValue}-${object.priceType}-${object.priceValue}`,
-          );
+          throw new Error('Incorrect csv object measure');
         }
         if (object.priceType === 'pricePerItem') {
           correctObject.pricePerItem = object.priceValue.replace(',', '.');
