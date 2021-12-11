@@ -8,6 +8,7 @@ const addDiscountPromise = require('./addDiscountPromise');
 const addDiscountPromisify = require('./addDiscountPromisify');
 const addDiscountAsync = require('./addDiscountAsync');
 const addDiscountCallback = require('./addDiscountCallback');
+const getNewestGoodsFileName = require('./getNewestGoodsFileName');
 
 module.exports = {
   filterUtil,
@@ -20,4 +21,5 @@ module.exports = {
   addDiscountPromisify,
   addDiscountAsync,
   addDiscountCallback,
+  getNewestGoodsFileName,
 };

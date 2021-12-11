@@ -8,12 +8,36 @@ function getMeasureIndex(good) {
   );
 }
 
+function getMeasureFieldName(good) {
+  return Object.keys(good)[getMeasureIndex(good)];
+}
+
 class CsvToJsonStream extends Duplex {
   optimizedJson = [];
 
   constructor() {
     super();
     this.csvParser = new CsvParser();
+  }
+
+  _isOptimizedArrayHasObject(object) {
+    return this.optimizedJson.some(
+      (o) => o.item === object.item && o.type === object.type,
+    );
+  }
+
+  _addGoodMeasure(object) {
+    const elemIndexForAddition = this.optimizedJson.findIndex(
+      (o) => o.item === object.item && o.type === object.type,
+    );
+    this.optimizedJson[elemIndexForAddition][
+      getMeasureFieldName(this.optimizedJson[elemIndexForAddition])
+    ] =
+      Number(
+        this.optimizedJson[elemIndexForAddition][
+          getMeasureFieldName(this.optimizedJson[elemIndexForAddition])
+        ],
+      ) + Number(object[getMeasureFieldName(object)]);
   }
 
   _write(chunk, _, next) {
@@ -23,7 +47,6 @@ class CsvToJsonStream extends Duplex {
     } else {
       jsonObjects = JSON.parse(chunk.toString());
     }
-    // let correctJsonObjects = [];
     try {
       validate(jsonObjects);
       this.optimizedJson = jsonObjects;
@@ -48,33 +71,8 @@ class CsvToJsonStream extends Duplex {
         } else {
           throw new Error('Incorrect csv object priceValue');
         }
-        if (
-          this.optimizedJson.some(
-            (o) =>
-              o.item === correctObject.item && o.type === correctObject.type,
-          )
-        ) {
-          const elemIndexForAddition = this.optimizedJson.findIndex(
-            (o) =>
-              o.item === correctObject.item && o.type === correctObject.type,
-          );
-          this.optimizedJson[elemIndexForAddition][
-            Object.keys(this.optimizedJson[elemIndexForAddition])[
-              getMeasureIndex(this.optimizedJson[elemIndexForAddition])
-            ]
-          ] =
-            Number(
-              this.optimizedJson[elemIndexForAddition][
-                Object.keys(this.optimizedJson[elemIndexForAddition])[
-                  getMeasureIndex(this.optimizedJson[elemIndexForAddition])
-                ]
-              ],
-            ) +
-            Number(
-              correctObject[
-                Object.keys(correctObject)[getMeasureIndex(correctObject)]
-              ],
-            );
+        if (this._isOptimizedArrayHasObject(correctObject)) {
+          this._addGoodMeasure(correctObject);
         } else {
           this.optimizedJson.push(correctObject);
         }
