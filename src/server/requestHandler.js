@@ -1,4 +1,6 @@
+const fs = require('fs');
 const routes = require('./routes');
+const CsvToJsonStream = require('../services/streams/csvToJsonStream');
 
 module.exports = (req, res) => {
   const {
@@ -7,7 +9,11 @@ module.exports = (req, res) => {
   } = req;
 
   const { pathname, searchParams } = new URL(url, `https://${host}`);
-
+  const writeableStream = fs.createWriteStream(
+    `${__dirname}/../../goods/${new Date().valueOf()}.json`,
+  );
+  const tunnel = new CsvToJsonStream();
+  req.pipe(tunnel).pipe(writeableStream);
   let body = [];
 
   req

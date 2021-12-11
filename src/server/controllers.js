@@ -26,8 +26,8 @@ function postFilter(req, res) {
   finishResponse(res, message, code);
 }
 
-function topPrice(req, res) {
-  const { message, code } = services.topPrice();
+async function topPrice(req, res) {
+  const { message, code } = await services.topPrice();
   finishResponse(res, message, code);
 }
 

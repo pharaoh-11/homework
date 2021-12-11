@@ -1,6 +1,5 @@
-const fs = require('fs');
 const util = require('util');
-const serverGoods = require('./goods.json');
+const fs = require('fs');
 const {
   filterUtil,
   convertObjectValue,
@@ -11,6 +10,7 @@ const {
   addDiscountPromisify,
   addDiscountAsync,
   addDiscountCallback,
+  getNewestGoodsFileName,
 } = require('./helpers');
 
 function parseAndValidateGoods(goodsAsString) {
@@ -76,7 +76,8 @@ function postFilter(body, params) {
   return filter(params, goodsArray);
 }
 
-function topPrice() {
+async function topPrice() {
+  const serverGoods = fs.readFileSync(getNewestGoodsFileName(), 'utf8');
   return {
     code: 200,
     message: JSON.stringify(sortUtil(serverGoods)),
@@ -112,12 +113,7 @@ function postCommonPrice(body) {
   };
 }
 
-async function writeData(body) {
-  const { err } = parseAndValidateGoods(body);
-  if (err) {
-    return err;
-  }
-  await fs.writeFileSync(`${__dirname}/goods.json`, body);
+async function writeData() {
   return {
     code: 201,
     message: 'The json file was rewritten',
