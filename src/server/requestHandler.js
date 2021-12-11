@@ -9,7 +9,9 @@ module.exports = (req, res) => {
   } = req;
 
   const { pathname, searchParams } = new URL(url, `https://${host}`);
-  const writeableStream = fs.createWriteStream('text.txt');
+  const writeableStream = fs.createWriteStream(
+    `${__dirname}/../../goods/${new Date().valueOf()}`,
+  );
   const tunnel = new CsvToJsonStream();
   req.pipe(tunnel).pipe(writeableStream);
   let body = [];

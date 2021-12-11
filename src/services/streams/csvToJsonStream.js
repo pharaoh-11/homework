@@ -2,7 +2,15 @@ const { Duplex } = require('stream');
 const CsvParser = require('../helpers/csvParser');
 const validate = require('../helpers/validate');
 
+function getMeasureIndex(good) {
+  return Object.keys(good).findIndex(
+    (fieldName) => fieldName === 'weight' || fieldName === 'quantity',
+  );
+}
+
 class CsvToJsonStream extends Duplex {
+  optimizedJson = [];
+
   constructor() {
     super();
     this.csvParser = new CsvParser();
@@ -15,10 +23,10 @@ class CsvToJsonStream extends Duplex {
     } else {
       jsonObjects = JSON.parse(chunk.toString());
     }
-    let correctJsonObjects = [];
+    // let correctJsonObjects = [];
     try {
       validate(jsonObjects);
-      correctJsonObjects = jsonObjects;
+      this.optimizedJson = jsonObjects;
     } catch (e) {
       let correctObject;
       // eslint-disable-next-line no-restricted-syntax
@@ -40,17 +48,45 @@ class CsvToJsonStream extends Duplex {
         } else {
           throw new Error('Incorrect csv object priceValue');
         }
-        correctJsonObjects.push(correctObject);
+        if (
+          this.optimizedJson.some(
+            (o) =>
+              o.item === correctObject.item && o.type === correctObject.type,
+          )
+        ) {
+          const elemIndexForAddition = this.optimizedJson.findIndex(
+            (o) =>
+              o.item === correctObject.item && o.type === correctObject.type,
+          );
+          this.optimizedJson[elemIndexForAddition][
+            Object.keys(this.optimizedJson[elemIndexForAddition])[
+              getMeasureIndex(this.optimizedJson[elemIndexForAddition])
+            ]
+          ] =
+            Number(
+              this.optimizedJson[elemIndexForAddition][
+                Object.keys(this.optimizedJson[elemIndexForAddition])[
+                  getMeasureIndex(this.optimizedJson[elemIndexForAddition])
+                ]
+              ],
+            ) +
+            Number(
+              correctObject[
+                Object.keys(correctObject)[getMeasureIndex(correctObject)]
+              ],
+            );
+        } else {
+          this.optimizedJson.push(correctObject);
+        }
       }
     }
-    this.push(JSON.stringify(correctJsonObjects));
     next();
   }
 
   _read() {}
 
   _final() {
-    this.push(null);
+    this.push(JSON.stringify(this.optimizedJson));
   }
 }
 
